@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin Cancer Detection | AI Diagnosis System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="logo">🏥</span>
+                <h1>SkinAI Detector</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home" onclick="scrollToSection('home')">Home</a></li>
+                <li><a href="#detector" onclick="scrollToSection('detector')">Detector</a></li>
+                <li><a href="#about" onclick="scrollToSection('about')">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Skin Cancer Detection</h1>
+            <p>AI-powered analysis using Deep Learning</p>
+            <p class="subtitle">Upload a skin lesion image to get an instant diagnosis</p>
+            <button class="cta-button" onclick="scrollToSection('detector')">
+                Get Started →
+            </button>
+        </div>
+        <div class="hero-features">
+            <div class="feature-card">
+                <span class="feature-icon">🔬</span>
+                <h3>Advanced AI</h3>
+                <p>MobileNetV2 Transfer Learning</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">⚡</span>
+                <h3>Fast Results</h3>
+                <p>Instant predictions in seconds</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🎯</span>
+                <h3>High Accuracy</h3>
+                <p>Trained on HAM10000 dataset</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detector Section -->
+    <section id="detector" class="detector-section">
+        <div class="container">
+            <h2>Image Analysis System</h2>
+            <p class="section-subtitle">Upload your image and get instant analysis</p>
+            
+            <div class="detector-wrapper">
+                <!-- Upload Area -->
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-content">
+                        <span class="upload-icon">📸</span>
+                        <h3>Upload Image</h3>
+                        <p>Drag and drop your image here or click to browse</p>
+                        <input 
+                            type="file" 
+                            id="imageInput" 
+                            accept="image/*"
+                            style="display: none;"
+                        >
+                        <button class="upload-button" onclick="document.getElementById('imageInput').click()">
+                            Choose Image
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Preview Section -->
+                <div id="previewSection" class="preview-section" style="display: none;">
+                    <div class="preview-container">
+                        <h3>Image Preview</h3>
+                        <img id="previewImage" src="" alt="Preview">
+                        <div class="preview-actions">
+                            <button class="btn-secondary" onclick="resetUpload()">
+                                ↻ Change Image
+                            </button>
+                            <button class="btn-primary" onclick="analyzeImage()">
+                                🔍 Analyze Image
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="resultsSection" class="results-section" style="display: none;">
+                    <div class="results-container">
+                        <h3>Analysis Results</h3>
+                        
+                        <!-- Prediction Result -->
+                        <div id="predictionResult" class="prediction-result">
+                            <div class="prediction-card">
+                                <span id="predictionIcon" class="result-icon"></span>
+                                <h2 id="predictionText">---</h2>
+                                <p id="confidenceText">Confidence: --</p>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Breakdown -->
+                        <div class="probability-breakdown">
+                            <h4>Classification Probabilities:</h4>
+                            <div class="probability-bar">
+                                <span class="label">Benign</span>
+                                <div class="bar-container">
+                                    <div id="benignBar" class="bar" style="width: 0%;"></div>
+                                </div>
+                                <span id="benignProb" class="percentage">0%</span>
+                            </div>
+                            <div class="probability-bar">
+                                <span class="label">Malignant</span>
+                                <div class="bar-container">
+                                    <div id="malignantBar" class="bar malignant" style="width: 0%;"></div>
+                                </div>
+                                <span id="malignantProb" class="percentage">0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Recommendation -->
+                        <div class="recommendation">
+                            <h4>Medical Recommendation:</h4>
+                            <p id="recommendationText">---</p>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="result-actions">
+                            <button class="btn-secondary" onclick="resetUpload()">
+                                ↻ New Analysis
+                            </button>
+                            <button class="btn-primary" onclick="downloadReport()">
+                                💾 Download Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading Section -->
+                <div id="loadingSection" class="loading-section" style="display: none;">
+                    <div class="spinner"></div>
+                    <h3>Analyzing Image...</h3>
+                    <p>Please wait while our AI model processes your image</p>
+                </div>
+
+                <!-- Error Section -->
+                <div id="errorSection" class="error-section" style="display: none;">
+                    <div class="error-message">
+                        <span class="error-icon">⚠️</span>
+                        <h3>Error</h3>
+                        <p id="errorText">An error occurred</p>
+                        <button class="btn-primary" onclick="resetUpload()">
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2>About This System</h2>
+            
+            <div class="about-grid">
+                <div class="about-card">
+                    <h3>🧠 Model Architecture</h3>
+                    <p>
+                        Our system uses MobileNetV2, a lightweight yet powerful neural network 
+                        trained through transfer learning on the HAM10000 skin cancer dataset. 
+                        This approach ensures both accuracy and efficiency.
+                    </p>
+                </div>
+                
+                <div class="about-card">
+                    <h3>📊 Dataset</h3>
+                    <p>
+                        Trained on HAM10000 (Human Against Machine), a dataset of 10,000 
+                        dermatoscopic images. This diverse dataset helps the model handle 
+                        various skin types and lesion characteristics.
+                    </p>
+                </div>
+                
+                <div class="about-card">
+                    <h3>⚠️ Disclaimer</h3>
+                    <p>
+                        This tool is for informational purposes only and should NOT replace 
+                        professional medical diagnosis. Always consult a dermatologist for 
+                        accurate diagnosis and treatment.
+                    </p>
+                </div>
+                
+                <div class="about-card">
+                    <h3>🔒 Privacy</h3>
+                    <p>
+                        Your uploaded images are processed locally and not stored on our servers. 
+                        Your privacy is our priority. No data is retained after analysis.
+                    </p>
+                </div>
+            </div>
+
+            <div class="technical-specs">
+                <h3>Technical Specifications</h3>
+                <table class="specs-table">
+                    <tr>
+                        <td><strong>Model:</strong></td>
+                        <td>MobileNetV2 Transfer Learning</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Input Size:</strong></td>
+                        <td>224 × 224 pixels (RGB)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Classes:</strong></td>
+                        <td>Benign, Malignant</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Framework:</strong></td>
+                        <td>TensorFlow/Keras</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Backend:</strong></td>
+                        <td>Flask REST API</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 SkinAI Detector. Built with ❤️ using Deep Learning.</p>
+            <p class="disclaimer">
+                <strong>Medical Disclaimer:</strong> This tool provides AI-assisted analysis only 
+                and should not be used as a substitute for professional medical advice.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
